@@ -6,6 +6,10 @@ window.onerror = function(msg, url, line) {
 let currentIntervalMs = parseInt(localStorage.getItem('af_interval')) || 2000;
 let batteryTimer = null;
 
+// BIẾN LƯU % PIN ẢO TÍCH HỢP TÍCH PHÂN DÒNG ĐIỆN (COULOMB COUNTING)
+let virtualLevel = null;
+let lastTimestamp = Date.now();
+
 function switchTab(tabId, btnEl) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -34,16 +38,16 @@ function fetchBatteryStats() {
     }
   }
   
-  // Dữ liệu fallback trên trình duyệt Web (Không lặp vòng ngớ ngẩn nữa)
+  // Dữ liệu Fallback khi test trên Web
   if (!stats || !stats.nativeOK) {
     stats = {
-      level: 79.00,
-      voltage: 4117,
-      temp: 37.0,
-      current: 302000,
+      level: 79.0,
+      voltage: 4052,
+      temp: 38.0,
+      current: -552000, // uA
       chargeCounter: 3895000,
-      isCharging: true,
-      plugType: 1,
+      isCharging: false,
+      plugType: 0,
       health: "Tốt",
       model: "SM-A055F",
       manufacturer: "samsung",
@@ -55,19 +59,44 @@ function fetchBatteryStats() {
     document.getElementById('lbl-native-status').innerText = "✅ Đã kết nối phần cứng Android";
   }
   
-  // TÍNH TOÁN % PIN CHUẨN 2 CHỮ SỐ THẬP PHÂN THỰC TẾ
-  let levelVal = parseFloat(stats.level) || 0;
-  let pct2Decimal = levelVal.toFixed(2); // Định dạng chuẩn 2 chữ số (VD: 79.00 hoặc 78.98)
-  
-  // Quy đổi dòng điện mA & công suất Watt
+  // 1. XỬ LÝ DÒNG ĐIỆN (mA) VÀ CÔNG SUẤT (W)
   let currentmA = Math.abs(stats.current) > 10000 ? Math.round(stats.current / 1000) : stats.current;
-  if (!stats.isCharging && currentmA > 0) currentmA = -currentmA;
+  if (!stats.isCharging && currentmA > 0) currentmA = -currentmA; // Nếu xả pin thì mang dấu âm
   
   let voltageV = stats.voltage / 1000.0;
   let powerW = ((voltageV * Math.abs(currentmA)) / 1000.0).toFixed(1);
   let powermW = Math.round(voltageV * Math.abs(currentmA));
   
-  // CHẨN ĐOÁN CỦ SẠC
+  // 2. THUẬT TOÁN COULOMB COUNTING TÍNH % PIN THẬP PHÂN THỰC TẾ
+  let osLevel = parseFloat(stats.level) || 0; // Số nguyên Android OS gửi về (VD: 79.0)
+  let now = Date.now();
+  let dtSeconds = (now - lastTimestamp) / 1000.0; // Thời gian trôi qua giữa 2 lần đọc (giây)
+  lastTimestamp = now;
+  
+  // Giả định dung lượng pin mặc định thiết bị (VD: 5000 mAh)
+  let designCapacitymAh = 5000;
+  
+  if (virtualLevel === null) {
+    virtualLevel = osLevel; // Khởi tạo lần đầu
+  } else {
+    // Công thức tích phân: Delta_Q (mAh) = (dòng_mA * thời_gian_s) / 3600
+    // Delta_% = (Delta_Q / dung_lượng_mAh) * 100
+    let deltaPct = ((currentmA * (dtSeconds / 3600.0)) / designCapacitymAh) * 100.0;
+    virtualLevel += deltaPct;
+    
+    // Ép biên độ: Không cho % ảo lệch quá 0.99% so với % thật của Android OS
+    if (virtualLevel > osLevel + 0.99) virtualLevel = osLevel + 0.99;
+    if (virtualLevel < osLevel - 0.99) virtualLevel = osLevel - 0.99;
+  }
+  
+  // Nếu Android OS vừa nhảy sang 1% mới (VD từ 79% xuống 78%), đồng bộ ngay
+  if (Math.floor(virtualLevel) !== Math.floor(osLevel)) {
+    virtualLevel = osLevel;
+  }
+  
+  let pct2Decimal = virtualLevel.toFixed(2); // Định dạng 2 chữ số thập phân
+  
+  // 3. CHẨN ĐOÁN CỦ SẠC
   let chargerQuality = "Chưa cắm sạc";
   if (stats.isCharging) {
     if (powerW >= 15) chargerQuality = "⚡ Sạc siêu nhanh (Fast Charge)";
@@ -76,7 +105,7 @@ function fetchBatteryStats() {
   }
   document.getElementById('lbl-charger-type').innerText = chargerQuality;
   
-  // CẬP NHẬT GIAO DIỆN
+  // 4. CẬP NHẬT GIAO DIỆN APP
   document.getElementById('val-battery-pct').innerText = `${pct2Decimal.replace('.', ',')}%`;
   document.getElementById('lbl-charge-status').innerText = stats.isCharging ? 'ĐANG SẠC' : 'ĐANG XẢ';
   document.getElementById('lbl-power-mw').innerText = `${stats.isCharging ? '+' : '-'}${powermW} mW`;
@@ -103,11 +132,11 @@ function fetchBatteryStats() {
   document.getElementById('val-device-vendor').innerText = stats.manufacturer;
   document.getElementById('val-device-board').innerText = stats.board;
   
-  updateGauge(levelVal);
+  updateGauge(virtualLevel);
   recordHistoryPoint(currentmA, stats.temp);
   updateAOD(pct2Decimal.replace('.', ','), stats.isCharging, powerW);
   
-  checkAlarms(levelVal, stats.temp);
+  checkAlarms(virtualLevel, stats.temp);
 }
 
 function changeInterval(ms, btnEl) {
