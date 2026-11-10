@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- HEADER HEADER APP -->
   <header class="app-header">
     <div class="header-title">AmpereFlow</div>
     <div class="header-icons">
@@ -19,13 +18,10 @@
     </div>
   </header>
 
-  <!-- NỘI DUNG CHÍNH (TAB CONTAINER) -->
   <main class="app-content">
 
-    <!-- TAB 1: CHI TIẾT (CHI TIẾT THÔNG SỐ SẠC & PIN) -->
     <section id="tab-detail" class="tab-content active">
       
-      <!-- DỒNG HỒ VÒNG CUNG CHARGING GAUGE -->
       <div class="gauge-card">
         <div class="gauge-container">
           <svg class="gauge-svg" viewBox="0 0 200 200">
@@ -33,148 +29,132 @@
             <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="80"></circle>
           </svg>
           <div class="gauge-inner">
-            <div class="gauge-val" id="val-battery-pct">77,99%</div>
-            <div class="gauge-status" id="lbl-charge-status">SẠC</div>
-            <div class="gauge-power-badge" id="lbl-power-mw">+2488 mW</div>
+            <div class="gauge-val" id="val-battery-pct">--%</div>
+            <div class="gauge-status" id="lbl-charge-status">ĐANG ĐỌC...</div>
+            <div class="gauge-power-badge" id="lbl-power-mw">-- mW</div>
           </div>
         </div>
       </div>
 
-      <!-- CARD TRẠNG THÁI HOẠT ĐỘNG -->
       <div class="info-card flex-row-between">
         <div>
           <div class="card-title">Đang theo dõi hoạt động</div>
-          <div class="card-desc">Hiển thị trạng thái sạc, tình trạng pin và chế độ Always On Display.</div>
+          <div class="card-desc" id="lbl-native-status">Kiểm tra kết nối phần cứng...</div>
         </div>
         <div class="toggle-badge" id="lbl-monitor-state">Bật</div>
       </div>
 
-      <!-- GRID THÔNG SỐ ĐIỆN NĂNG -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-header">⚡ ĐIỆN ÁP</div>
-          <div class="stat-value" id="val-voltage">4105 mV</div>
+          <div class="stat-value" id="val-voltage">-- mV</div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">〰️ DÒNG ĐIỆN</div>
-          <div class="stat-value highlight-green" id="val-current">+606 mA</div>
+          <div class="stat-value highlight-green" id="val-current">-- mA</div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">🔋 CÔNG SUẤT</div>
-          <div class="stat-value highlight-green" id="val-power">+2.5 W</div>
+          <div class="stat-value highlight-green" id="val-power">-- W</div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">🌡️ NHIỆT ĐỘ</div>
-          <div class="stat-value" id="val-temp">36.0°C</div>
+          <div class="stat-value" id="val-temp">--°C</div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">💚 TÌNH TRẠNG</div>
-          <div class="stat-value" id="val-health">99%</div>
+          <div class="stat-value" id="val-health">Tốt</div>
         </div>
 
         <div class="stat-card">
           <div class="stat-header">🔌 ĐÃ CẮM</div>
-          <div class="stat-value" id="val-plug">AC</div>
+          <div class="stat-value" id="val-plug">--</div>
         </div>
       </div>
 
-      <!-- CARD THỜI GIAN SẠC ƯỚC TÍNH -->
-      <div class="info-card">
-        <div class="card-title">🕒 Thời gian sạc</div>
-        <div class="estimate-hero" id="val-time-remaining">Đầy đủ trong 29m</div>
-        <div class="card-desc">Đang sạc được 6m · thời gian điển hình bên dưới</div>
-        
-        <div class="sub-stats-row">
-          <div class="sub-stat-item">
-            <span class="sub-label">TO 80%</span>
-            <span class="sub-val">2h 59m</span>
-          </div>
-          <div class="sub-stat-divider"></div>
-          <div class="sub-stat-item">
-            <span class="sub-label">TO 100%</span>
-            <span class="sub-val">3h 47m</span>
-          </div>
-          <div class="sub-stat-divider"></div>
-          <div class="sub-stat-item">
-            <span class="sub-label">AVG SPEED</span>
-            <span class="sub-val" id="val-avg-speed">4W</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- CARD HỒ SƠ THIẾT BỊ -->
       <div class="info-card">
         <div class="card-title-row">
           <span class="card-title">HỒ SƠ THIẾT BỊ</span>
           <span>📱</span>
         </div>
-        <div class="device-model-hero" id="val-device-model">SM-A055F</div>
+        <div class="device-model-hero" id="val-device-model">Đang đọc...</div>
         <div class="sub-stats-row" style="margin-top: 10px;">
           <div class="sub-stat-item" style="text-align: left;">
             <span class="sub-label">NHÀ SẢN XUẤT</span>
-            <span class="sub-val" id="val-device-vendor">samsung</span>
+            <span class="sub-val" id="val-device-vendor">--</span>
           </div>
           <div class="sub-stat-item" style="text-align: left;">
             <span class="sub-label">BO MẠCH</span>
-            <span class="sub-val" id="val-device-board">a05m</span>
+            <span class="sub-val" id="val-device-board">--</span>
           </div>
         </div>
       </div>
 
     </section>
 
-    <!-- TAB 2: THIẾT KẾ / CHĂM SÓC PIN -->
     <section id="tab-design" class="tab-content">
       <div class="info-card">
         <div class="card-title">💚 Tình trạng pin</div>
-        <div class="estimate-hero" style="color: #2e7d32;">99% Xuất sắc</div>
-        <div class="card-desc">Được ước tính từ 383 chu kỳ sạc</div>
-        
-        <div class="sub-stats-row" style="margin-top: 14px;">
-          <div class="sub-stat-item">
-            <span class="sub-label">ƯỚC LƯỢNG</span>
-            <span class="sub-val">4.950mAh</span>
-          </div>
-          <div class="sub-stat-divider"></div>
-          <div class="sub-stat-item">
-            <span class="sub-label">THIẾT KẾ</span>
-            <span class="sub-val">5.000mAh</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="info-card">
-        <div class="card-title">Chăm sóc pin</div>
-        <div class="card-desc">Điều gì thực sự làm pin lithium chai, và điều gì thì không. Các phương pháp sạc từ 20% đến 80% giúp tối ưu tuổi thọ cell pin.</div>
+        <div class="estimate-hero" style="color: #2e7d32;" id="tab2-health-val">--% Xuất sắc</div>
+        <div class="card-desc">Cập nhật trực tiếp từ hệ thống Android</div>
       </div>
     </section>
 
-    <!-- TAB 3: LỊCH SỬ / ĐỒ THỊ -->
     <section id="tab-history" class="tab-content">
       <div class="info-card">
-        <div class="card-title">📈 Hồ sơ sạc</div>
-        <div class="chart-legend">
-          <span class="legend-dot green"></span> Tốc độ sạc
-          <span class="legend-dot brown" style="margin-left: 12px;"></span> Nhiệt độ
-        </div>
+        <div class="card-title">📈 Hồ sơ sạc thực tế</div>
         <div class="chart-box">
           <canvas id="batteryChart"></canvas>
         </div>
-        <div class="card-desc" style="margin-top: 10px; text-align: center;" id="lbl-chart-peak">
-          Đỉnh điểm khoảng 34.5°C ở mức sạc 65%
+      </div>
+    </section>
+
+    <section id="tab-usage" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">💡 Hướng dẫn</div>
+        <div class="card-desc">Cắm sạc để xem biến động dòng điện và công suất thực tế của thiết bị.</div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">⚙️ Cài đặt</div>
+        <div class="form-row">
+          <span>Tự động cập nhật (2s)</span>
+          <input type="checkbox" checked disabled />
         </div>
       </div>
     </section>
 
-    <!-- TAB 4: CÁCH SỬ DỤNG -->
-    <section id="tab-usage" class="tab-content">
-      <div class="info-card">
-        <div class="card-title">💡 Hướng dẫn đo chuẩn</div>
-        <div class="card-desc" style="line-height: 1.6;">
-          1. Tránh sử dụng điện thoại trong khi sạc để có kết quả đo công suất thực chính xác nhất.<br>
-          2. Nhiệt độ môi trường ảnh hưởng đến tốc độ sạc tối đa của bo mạch.<br>
-          3. Đồ thị sẽ tự động ghi lại quá trình dòng điện $\text{mA}$ tăng giảm theo
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('tab-detail', this)">
+      <span class="nav-icon">🔋</span>
+      <span class="nav-label">Chi tiết</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-design', this)">
+      <span class="nav-icon">🎨</span>
+      <span class="nav-label">Thiết kế</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-history', this)">
+      <span class="nav-icon">📜</span>
+      <span class="nav-label">Lịch sử</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-usage', this)">
+      <span class="nav-icon">📈</span>
+      <span class="nav-label">Cách sử dụng</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Cài đặt</span>
+    </button>
+  </nav>
+
+  <script src="main.js"></script>
+</body>
+</html>
