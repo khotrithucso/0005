@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AmpereFlow V3 PRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-default">
+
+  <!-- HEADER APP -->
+  <header class="app-header">
+    <div class="header-title">AmpereFlow <span class="v3-badge">V3 PRO</span></div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-aod" title="Màn hình chờ Always On Display">🌙</button>
+      <button class="icon-btn" id="btn-theme-quick" title="Đổi Giao diện Quick Theme">🎨</button>
+      <div class="user-avatar">👤</div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG NỀN TAB CONTAINER -->
+  <main class="app-content">
+
+    <!-- TAB 1: CHI TIẾT SẠC & PIN REALTIME -->
+    <section id="tab-detail" class="tab-content active">
+      
+      <!-- ĐỒNG HỒ VÒNG CUNG DYNAMIC GAUGE -->
+      <div class="gauge-card">
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 200 200">
+            <circle class="gauge-bg" cx="100" cy="100" r="80"></circle>
+            <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="80"></circle>
+          </svg>
+          <div class="gauge-inner">
+            <div class="gauge-val" id="val-battery-pct">--,--%</div>
+            <div class="gauge-status" id="lbl-charge-status">ĐANG ĐỌC...</div>
+            <div class="gauge-power-badge" id="lbl-power-mw">-- mW</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD CHẨN ĐOÁN CỦ SẠC & KẾT NỐI -->
+      <div class="info-card flex-row-between">
+        <div>
+          <div class="card-title" id="lbl-charger-type">⚡ Nguồn Sạc: Đang kiểm tra...</div>
+          <div class="card-desc" id="lbl-native-status">Kiểm tra kết nối phần cứng Android...</div>
+        </div>
+        <div class="toggle-badge" id="lbl-monitor-state">Tự động</div>
+      </div>
+
+      <!-- GRID THÔNG SỐ ĐIỆN NĂNG (6 THẺ) -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">⚡ ĐIỆN ÁP</div>
+          <div class="stat-value" id="val-voltage">-- mV</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">〰️ DÒNG ĐIỆN</div>
+          <div class="stat-value highlight-green" id="val-current">-- mA</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🔋 CÔNG SUẤT</div>
+          <div class="stat-value highlight-green" id="val-power">-- W</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🌡️ NHIỆT ĐỘ</div>
+          <div class="stat-value" id="val-temp">--°C</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">💚 TÌNH TRẠNG</div>
+          <div class="stat-value" id="val-health">Tốt</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🔌 NGUỒN CẮM</div>
+          <div class="stat-value" id="val-plug">--</div>
+        </div>
+      </div>
+
+      <!-- HỒ SƠ THIẾT BỊ -->
+      <div class="info-card">
+        <div class="card-title-row">
+          <span class="card-title">HỒ SƠ THIẾT BỊ</span>
+          <span>📱</span>
+        </div>
+        <div class="device-model-hero" id="val-device-model">Đang đọc...</div>
+        <div class="sub-stats-row" style="margin-top: 10px;">
+          <div class="sub-stat-item" style="text-align: left;">
+            <span class="sub-label">NHÀ SẢN XUẤT</span>
+            <span class="sub-val" id="val-device-vendor">--</span>
+          </div>
+          <div class="sub-stat-divider"></div>
+          <div class="sub-stat-item" style="text-align: left;">
+            <span class="sub-label">BO MẠCH</span>
+            <span class="sub-val" id="val-device-board">--</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: THIẾT KẾ & ĐỘ CHAI PIN -->
+    <section id="tab-design" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">💚 Sức khỏe & Dung lượng Cell Pin</div>
+        <div class="estimate-hero" style="color: #2e7d32;" id="val-health-pct">--,--% Tốt</div>
+        <div class="card-desc">Tính toán dựa trên điện tích tích lũy và dòng nạp thực tế.</div>
+        
+        <div class="sub-stats-row" style="margin-top: 14px;">
+          <div class="sub-stat-item">
+            <span class="sub-label">DUNG LƯỢNG MẢNG</span>
+            <span class="sub-val" id="val-charge-counter">-- uAh</span>
+          </div>
+          <div class="sub-stat-divider"></div>
+          <div class="sub-stat-item">
+            <span class="sub-label">THIẾT KẾ MẶC ĐỊNH</span>
+            <span class="sub-val">5.000 mAh</span>
+          </div>
+          <div class="sub-stat-divider"></div>
+          <div class="sub-stat-item">
+            <span class="sub-label">ĐỘ CHAI DỰ KIẾN</span>
+            <span class="sub-val" id="val-wear-level">0.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">📘 Cẩm nang Bảo vệ Tuổi thọ Pin</div>
+        <ul class="care-list">
+          <li><strong>Quy tắc 20% - 80%:</strong> Giữ mức sạc trong khoảng 20% đến 80% giúp tăng gấp đôi số chu kỳ sạc của cell pin Lithium-ion.</li>
+          <li><strong>Tránh quá nhiệt (>40°C):</strong> Không vừa sạc vừa chơi game nặng để tránh gây thoái hóa chất điện phân.</li>
+          <li><strong>Ngắt sạc qua đêm:</strong> Sử dụng tính năng cảnh báo 80% hoặc 100% của ứng dụng để ngắt nguồn kịp thời.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TAB 3: LỊCH SỬ SẠC & ĐỒ THỊ SÓNG KÉP -->
+    <section id="tab-history" class="tab-content">
+      <div class="info-card">
+        <div class="card-title flex-row-between">
+          <span>📈 Đồ thị Sóng kép Real-time</span>
+          <button class="btn-xs" onclick="exportHistoryCSV()">📥 Xuất CSV</button>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-dot green"></span> Dòng sạc (mA)
+          <span class="legend-dot orange" style="margin-left: 12px;"></span> Nhiệt độ (°C)
+        </div>
+        <div class="chart-box">
+          <canvas id="batteryChart"></canvas>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title-row">
+          <span class="card-title">📜 Nhật ký Các Phiên Sạc</span>
+          <button class="btn-xs danger" onclick="clearSessionLogs()">Xóa nhật ký</button>
+        </div>
+        <div id="session-logs-list" class="session-logs-container">
+          <div class="empty-log">Chưa có dữ liệu phiên sạc nào được ghi lại.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: CẢNH BÁO ÂM THANH BẢO VỆ PIN -->
+    <section id="tab-usage" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">🔔 Thiết lập Cảnh báo Thông minh</div>
+        <div class="card-desc" style="margin-bottom: 10px;">Phát chuông báo âm thanh và rung haptics khi đạt ngưỡng:</div>
+
+        <div class="form-row">
+          <span>Cảnh báo bảo vệ Pin (Đạt 80%)</span>
+          <input type="checkbox" id="chk-alarm-80" checked />
+        </div>
+        <div class="form-row">
+          <span>Cảnh báo sạc đầy (Đạt 100%)</span>
+          <input type="checkbox" id="chk-alarm-100" checked />
+        </div>
+        <div class="form-row">
+          <span>Cảnh báo pin quá nhiệt (>42°C)</span>
+          <input type="checkbox" id="chk-alarm-heat" checked />
+        </div>
+        <div class="form-row">
+          <span>Phát chuông âm thanh (Web Audio API)</span>
+          <input type="checkbox" id="chk-alarm-sound" checked />
+        </div>
+
+        <button class="btn-full-action" style="margin-top: 14px;" onclick="testAlarmSound()">🔊 Thử Âm Thanh Cảnh Báo</button>
+      </div>
+    </section>
+
+    <!-- TAB 5: CÀI ĐẶT & CHỌN THEME -->
+    <section id="tab-settings" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">🎨 Chủ đề Giao diện (Theme)</div>
+        <div class="theme-grid">
+          <button class="theme-btn active" data-theme="theme-default" onclick="selectTheme('theme-default', this)">
+            <span class="theme-preview green"></span> Material Green
+          </button>
+          <button class="theme-btn" data-theme="theme-oled" onclick="selectTheme('theme-oled', this)">
+            <span class="theme-preview oled"></span> OLED Black
+          </button>
+          <button class="theme-btn" data-theme="theme-neon" onclick="selectTheme('theme-neon', this)">
+            <span class="theme-preview neon"></span> Cyber Neon
+          </button>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">⚙️ Tốc độ làm mới & Đơn vị</div>
+        <div class="card-desc" style="margin-bottom: 8px;">Tần số đọc phần cứng (Giảm tần số để tiết kiệm CPU & Pin):</div>
+        <div class="interval-selector">
+          <button class="interval-btn" data-ms="1000" onclick="changeInterval(1000, this)">1s (Liên tục)</button>
+          <button class="interval-btn active" data-ms="2000" onclick="changeInterval(2000, this)">2s (Khuyên dùng)</button>
+          <button class="interval-btn" data-ms="3000" onclick="changeInterval(3000, this)">3s (Tiết kiệm)</button>
+          <button class="interval-btn" data-ms="5000" onclick="changeInterval(5000, this)">5s (Siêu tiết kiệm)</button>
+        </div>
+
+        <div class="form-row" style="margin-top: 14px;">
+          <span>Đơn vị nhiệt độ hiển thị</span>
+          <div class="unit-toggle">
+            <button class="unit-btn active" id="btn-unit-c" onclick="changeTempUnit('C')">°C</button>
+            <button class="unit-btn" id="btn-unit-f" onclick="changeTempUnit('F')">°F</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- OVERLAY ALWAYS ON DISPLAY (AOD MODAL - OLED ANTI-BURN-IN) -->
+  <div id="aod-overlay" class="aod-modal">
+    <div id="aod-shift-box" class="aod-shift-box">
+      <div class="aod-clock" id="aod-clock">00:00</div>
+      <div class="aod-pct" id="aod-pct">77,99%</div>
+      <div class="aod-status" id="aod-status">⚡ SẠC +2.5W</div>
+      <div class="aod-sub-info" id="aod-sub-info">36.0°C · 4105 mV</div>
+    </div>
+    <button class="aod-close-btn" onclick="toggleAOD(false)">Chạm để thoát AOD</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('tab-detail', this)">
+      <span class="nav-icon">🔋</span>
+      <span class="nav-label">Chi tiết</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-design', this)">
+      <span class="nav-icon">🎨</span>
+      <span class="nav-label">Thiết kế</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-history', this)">
+      <span class="nav-icon">📜</span>
+      <span class="nav-label">Lịch sử</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-usage', this)">
+      <span class="nav-icon">🔔</span>
+      <span class="nav-label">Cảnh báo</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Cài đặt</span>
+    </button>
+  </nav>
+
+  <script src="main.js"></script>
+</body>
+</html>
