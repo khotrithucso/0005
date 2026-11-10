@@ -1,4 +1,4 @@
-name: Build Android APK - App 0005 (AmpereFlow Battery Monitor)
+name: Build Android APK - App 0005 (AmpereFlow Battery V2)
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # 1. Chuẩn bị tài nguyên Web (HTML, CSS, MAIN.JS) & Tạo cấu hình capacitor.config.json cho App 0005
+      # 1. Prepare Web Assets & Config
       - name: Prepare Web Assets & Config
         run: |
           npm init -y
@@ -31,18 +31,18 @@ jobs:
           cat << 'EOF' > capacitor.config.json
           {
             "appId": "com.trithucso.ampereflow_0005_x9z",
-            "appName": "AmpereFlow Battery Monitor Pro",
+            "appName": "AmpereFlow Battery Monitor Pro V2",
             "webDir": "www",
             "bundledWebRuntime": false
           }
           EOF
 
-      # 2. Cài đặt các thư viện Capacitor & AdMob Plugin
+      # 2. Install Capacitor & AdMob
       - name: Install Capacitor & Plugins
         run: |
           npm install --legacy-peer-deps @capacitor/core @capacitor/cli @capacitor/android @capacitor-community/admob
 
-      # 3. Đồng bộ dự án Capacitor Android & Đẩy tệp Web vào thư mục Assets Native
+      # 3. Add & Sync Android Project
       - name: Add & Sync Capacitor Android Project
         run: |
           npx cap add android || true
@@ -50,7 +50,7 @@ jobs:
           mkdir -p android/app/src/main/assets/public
           cp -r www/* android/app/src/main/assets/public/
 
-          # 3b. TỰ ĐỘNG TẠO NATIVE BRIDGE ĐỌC THÔNG SỐ PIN NÂNG CAO & THÔNG TIN MÁY THỰC TẾ
+      # 3b. Inject Advanced Native Battery Bridge (Micro-Ah precision + Device Profile)
       - name: Inject Native Battery Bridge to MainActivity
         run: |
           mkdir -p android/app/src/main/java/com/trithucso/ampereflow_0005_x9z
@@ -92,7 +92,7 @@ jobs:
                           IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
                           Intent b = context.getApplicationContext().registerReceiver(null, ifilter);
                           
-                          int temp = 0, voltage = 0, level = 0, scale = 100, status = -1, plug = -1;
+                          int temp = 0, voltage = 0, level = 0, scale = 100, status = -1, plug = -1, health = -1;
 
                           if (b != null) {
                               temp = b.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
@@ -101,20 +101,28 @@ jobs:
                               scale = b.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
                               status = b.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
                               plug = b.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+                              health = b.getIntExtra(BatteryManager.EXTRA_HEALTH, -1);
                           }
 
                           BatteryManager bm = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
                           int currentNow = 0;
+                          int chargeCounter = 0;
                           if (bm != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                               currentNow = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);
+                              chargeCounter = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER);
                           }
 
                           float pct = scale > 0 ? (level * 100f) / scale : 0;
                           boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
 
+                          String healthStr = "Tốt";
+                          if (health == BatteryManager.BATTERY_HEALTH_OVERHEAT) healthStr = "Quá nhiệt";
+                          else if (health == BatteryManager.BATTERY_HEALTH_DEAD) healthStr = "Hỏng";
+                          else if (health == BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE) healthStr = "Quá áp";
+
                           return String.format(java.util.Locale.US,
-                              "{\"level\":%.2f,\"voltage\":%d,\"temp\":%.1f,\"current\":%d,\"isCharging\":%b,\"plugType\":%d,\"model\":\"%s\",\"manufacturer\":\"%s\",\"board\":\"%s\",\"nativeOK\":true}",
-                              pct, voltage, temp / 10.0f, currentNow, isCharging, plug, Build.MODEL, Build.MANUFACTURER, Build.BOARD);
+                              "{\"level\":%.4f,\"voltage\":%d,\"temp\":%.1f,\"current\":%d,\"chargeCounter\":%d,\"isCharging\":%b,\"plugType\":%d,\"health\":\"%s\",\"model\":\"%s\",\"manufacturer\":\"%s\",\"board\":\"%s\",\"nativeOK\":true}",
+                              pct, voltage, temp / 10.0f, currentNow, chargeCounter, isCharging, plug, healthStr, Build.MODEL, Build.MANUFACTURER, Build.BOARD);
                       } catch (Exception e) {
                           return "{\"nativeOK\":false}";
                       }
@@ -122,9 +130,8 @@ jobs:
               }
           }
           EOF
- 
 
-      # 4. Tự động cắt và chuyển đổi icon.png ở thư mục gốc thành bộ Icon App Android (Mipmap)
+      # 4. Generate App Icons
       - name: Generate Android App Icons from icon.png
         run: |
           python3 -m pip install Pillow --break-system-packages || python3 -m pip install Pillow || true
@@ -132,14 +139,7 @@ jobs:
           import os
           from PIL import Image
 
-          sizes = {
-              'mipmap-mdpi': 48,
-              'mipmap-hdpi': 72,
-              'mipmap-xhdpi': 96,
-              'mipmap-xxhdpi': 144,
-              'mipmap-xxxhdpi': 192
-          }
-
+          sizes = {'mipmap-mdpi': 48, 'mipmap-hdpi': 72, 'mipmap-xhdpi': 96, 'mipmap-xxhdpi': 144, 'mipmap-xxxhdpi': 192}
           icon_path = 'icon.png'
           if os.path.exists(icon_path):
               img = Image.open(icon_path).convert('RGBA')
@@ -151,12 +151,10 @@ jobs:
                   resized.save(os.path.join(out_dir, 'ic_launcher.png'), 'PNG')
                   resized.save(os.path.join(out_dir, 'ic_launcher_round.png'), 'PNG')
                   resized.save(os.path.join(out_dir, 'ic_launcher_foreground.png'), 'PNG')
-              print('✅ Đã cập nhật icon.png thành công vào tất cả mipmap resolution!')
-          else:
-              print('⚠️ Không tìm thấy file icon.png!')
+              print('✅ Icon generated!')
           "
 
-      # 5. Khắc phục lỗi xung đột trùng lặp thư viện Kotlin
+      # 5. Fix Kotlin Duplicate Dependencies
       - name: Fix Kotlin Duplicate Dependencies
         run: |
           if ! grep -q "kotlin-stdlib-jdk7" android/app/build.gradle; then
@@ -168,7 +166,7 @@ jobs:
             " >> android/app/build.gradle
           fi
 
-      # 6. Cấu hình AdMob App ID & Bỏ qua rào cản SSL Mạng (Cleartext Traffic)
+      # 6. Configure AdMob & Network Manifest
       - name: Configure AdMob Network Security & Manifest
         run: |
           mkdir -p android/app/src/main/res/xml
@@ -199,17 +197,17 @@ jobs:
                   f.write(content)
           " || true
 
-      # 7. Cấp quyền thực thi và biên dịch file APK Debug
+      # 7. Build APK
       - name: Build Android Debug APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      # 8. Upload file APK kết quả lên GitHub Artifacts
+      # 8. Upload Artifact
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-0005-battery-debug-apk
+          name: app-0005-battery-v2-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
  

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AmpereFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-title">AmpereFlow</div>
+    <div class="header-icons">
+      <span class="icon-btn">💎</span>
+      <div class="user-avatar">👤</div>
+    </div>
+  </header>
+
+  <main class="app-content">
+
+    <section id="tab-detail" class="tab-content active">
+      
+      <div class="gauge-card">
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 200 200">
+            <circle class="gauge-bg" cx="100" cy="100" r="80"></circle>
+            <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="80"></circle>
+          </svg>
+          <div class="gauge-inner">
+            <div class="gauge-val" id="val-battery-pct">--%</div>
+            <div class="gauge-status" id="lbl-charge-status">ĐANG ĐỌC...</div>
+            <div class="gauge-power-badge" id="lbl-power-mw">-- mW</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card flex-row-between">
+        <div>
+          <div class="card-title">Đang theo dõi hoạt động</div>
+          <div class="card-desc" id="lbl-native-status">Kiểm tra kết nối phần cứng...</div>
+        </div>
+        <div class="toggle-badge" id="lbl-monitor-state">Bật</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">⚡ ĐIỆN ÁP</div>
+          <div class="stat-value" id="val-voltage">-- mV</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">〰️ DÒNG ĐIỆN</div>
+          <div class="stat-value highlight-green" id="val-current">-- mA</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🔋 CÔNG SUẤT</div>
+          <div class="stat-value highlight-green" id="val-power">-- W</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🌡️ NHIỆT ĐỘ</div>
+          <div class="stat-value" id="val-temp">--°C</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">💚 TÌNH TRẠNG</div>
+          <div class="stat-value" id="val-health">Tốt</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">🔌 ĐÃ CẮM</div>
+          <div class="stat-value" id="val-plug">--</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title-row">
+          <span class="card-title">HỒ SƠ THIẾT BỊ</span>
+          <span>📱</span>
+        </div>
+        <div class="device-model-hero" id="val-device-model">Đang đọc...</div>
+        <div class="sub-stats-row" style="margin-top: 10px;">
+          <div class="sub-stat-item" style="text-align: left;">
+            <span class="sub-label">NHÀ SẢN XUẤT</span>
+            <span class="sub-val" id="val-device-vendor">--</span>
+          </div>
+          <div class="sub-stat-item" style="text-align: left;">
+            <span class="sub-label">BO MẠCH</span>
+            <span class="sub-val" id="val-device-board">--</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="tab-design" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">💚 Tình trạng pin</div>
+        <div class="estimate-hero" style="color: #2e7d32;" id="tab2-health-val">--% Xuất sắc</div>
+        <div class="card-desc">Cập nhật trực tiếp từ hệ thống Android</div>
+      </div>
+    </section>
+
+    <section id="tab-history" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">📈 Hồ sơ sạc thực tế</div>
+        <div class="chart-box">
+          <canvas id="batteryChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-usage" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">💡 Hướng dẫn</div>
+        <div class="card-desc">Cắm sạc để xem biến động dòng điện và công suất thực tế của thiết bị.</div>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="tab-content">
+      <div class="info-card">
+        <div class="card-title">⚙️ Cài đặt</div>
+        <div class="form-row">
+          <span>Tự động cập nhật (2s)</span>
+          <input type="checkbox" checked disabled />
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('tab-detail', this)">
+      <span class="nav-icon">🔋</span>
+      <span class="nav-label">Chi tiết</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-design', this)">
+      <span class="nav-icon">🎨</span>
+      <span class="nav-label">Thiết kế</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-history', this)">
+      <span class="nav-icon">📜</span>
+      <span class="nav-label">Lịch sử</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-usage', this)">
+      <span class="nav-icon">📈</span>
+      <span class="nav-label">Cách sử dụng</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Cài đặt</span>
+    </button>
+  </nav>
+
+  <script src="main.js"></script>
+</body>
+</html>

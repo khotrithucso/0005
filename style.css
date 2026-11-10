@@ -1,9 +1,7 @@
 :root {
   --bg-main: #f5f6f0;
   --card-bg: #eaede3;
-  --card-card-inner: #dedfd5;
   --accent-green: #2d5a39;
-  --accent-light-green: #408253;
   --text-dark: #1b261d;
   --text-muted: #5c685e;
   --border-color: #d2d7c8;
@@ -26,7 +24,6 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -39,30 +36,42 @@ body {
 }
 
 .header-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
-  color: var(--text-dark);
-  letter-spacing: -0.5px;
+}
+
+.v2-tag {
+  font-size: 10px;
+  background: var(--accent-green);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 6px;
+  vertical-align: middle;
 }
 
 .header-icons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: #d0d5c5;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
 }
 
-/* TAB CONTENT MANAGEMENT */
 .app-content {
   padding: 0 16px;
 }
@@ -73,7 +82,7 @@ body {
 
 .tab-content.active {
   display: block;
-  animation: fadeIn 0.25s ease-in-out;
+  animation: fadeIn 0.2s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -81,7 +90,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* CARDS */
 .info-card {
   background-color: var(--card-bg);
   border-radius: 20px;
@@ -96,44 +104,40 @@ body {
 }
 
 .card-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--text-dark);
   margin-bottom: 4px;
 }
 
 .card-title-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .card-desc {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
 .toggle-badge {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-dark);
-  background-color: var(--bg-main);
-  padding: 6px 14px;
-  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--bg-main);
+  padding: 6px 12px;
+  border-radius: 16px;
 }
 
-/* GAUGE METER VÒNG CUNG */
 .gauge-card {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 16px 0;
 }
 
 .gauge-container {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 230px;
+  height: 230px;
 }
 
 .gauge-svg {
@@ -146,8 +150,7 @@ body {
   fill: none;
   stroke: #dbe0d2;
   stroke-width: 16;
-  stroke-dasharray: 377; /* 2 * PI * r * (270/360) */
-  stroke-dashoffset: 0;
+  stroke-dasharray: 377;
   stroke-linecap: round;
 }
 
@@ -158,7 +161,7 @@ body {
   stroke-dasharray: 502;
   stroke-dashoffset: 200;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.8s ease;
+  transition: stroke-dashoffset 0.6s ease;
 }
 
 .gauge-inner {
@@ -174,30 +177,29 @@ body {
 }
 
 .gauge-val {
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
 }
 
 .gauge-status {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 1px;
-  margin-top: 2px;
 }
 
 .gauge-power-badge {
-  margin-top: 8px;
+  margin-top: 6px;
   background-color: #dce5d8;
   color: var(--accent-green);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: 10px;
 }
 
-/* STATS GRID 2 COLUMNS */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -208,33 +210,30 @@ body {
 .stat-card {
   background-color: var(--card-bg);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 14px;
 }
 
 .stat-header {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
-  letter-spacing: 0.5px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .stat-value {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
-  color: var(--text-dark);
 }
 
 .highlight-green {
   color: var(--accent-green);
 }
 
-/* ESTIMATE & SUB STATS */
 .estimate-hero {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--accent-green);
-  margin: 6px 0;
+  margin: 4px 0;
 }
 
 .sub-stats-row {
@@ -243,14 +242,12 @@ body {
   justify-content: space-around;
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 14px;
-  padding: 12px;
-  margin-top: 12px;
+  padding: 10px;
 }
 
 .sub-stat-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .sub-label {
@@ -260,36 +257,30 @@ body {
 }
 
 .sub-val {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
-  color: var(--text-dark);
-  margin-top: 2px;
 }
 
 .sub-stat-divider {
   width: 1px;
-  height: 24px;
+  height: 20px;
   background-color: var(--border-color);
 }
 
 .device-model-hero {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
-  color: var(--text-dark);
-  margin-top: 4px;
 }
 
-/* CHART BOX */
 .chart-box {
   width: 100%;
-  height: 160px;
+  height: 150px;
   margin-top: 10px;
 }
 
 .chart-legend {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
-  margin-top: 4px;
 }
 
 .legend-dot {
@@ -305,17 +296,85 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-color);
-  font-size: 14px;
+  font-size: 13px;
+}
+
+/* INTERVAL SELECTOR BUTTONS */
+.interval-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.interval-btn {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.interval-btn.active {
+  background: var(--accent-green);
+  color: #fff;
+  border-color: var(--accent-green);
+}
+
+/* ALWAYS ON DISPLAY OVERLAY */
+.aod-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #000;
+  color: #33ff33;
+  z-index: 999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.aod-modal.active {
+  display: flex;
+}
+
+.aod-clock {
+  font-size: 64px;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+.aod-pct {
+  font-size: 32px;
+  margin-top: 10px;
+}
+
+.aod-status {
+  font-size: 16px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.aod-close-btn {
+  margin-top: 40px;
+  background: #222;
+  color: #aaa;
+  border: 1px solid #444;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 12px;
 }
 
 /* BOTTOM NAVIGATION */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   max-width: 600px;
   margin: 0 auto;
   background-color: var(--bg-main);
@@ -334,26 +393,9 @@ body {
   align-items: center;
   cursor: pointer;
   flex: 1;
-  padding: 4px 0;
 }
 
-.nav-icon {
-  font-size: 18px;
-  margin-bottom: 2px;
-}
-
-.nav-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.nav-item.active .nav-label {
-  color: var(--accent-green);
-  font-weight: 800;
-}
-
-.nav-item.active .nav-icon {
-  transform: scale(1.1);
-}
+.nav-icon { font-size: 18px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+.nav-item.active .nav-label { color: var(--accent-green); font-weight: 800; }
  
